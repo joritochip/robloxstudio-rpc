@@ -1,0 +1,14 @@
+{
+  "name": "robloxstudio-rpc",
+  "version": "1.0.0",
+  "description": "Displays Roblox Studio activity in Discord",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "node src/index.js"
+  },
+  "author": "joritochip",
+  "license": "MIT",
+  "dependencies": {
+    "discord-rpc": "^4.0.1"
+  }
+}

@@ -1,0 +1,3 @@
+@echo off
+echo [92m[robloxstudio-rpc][0m Starting...
+node src/index.js
