@@ -25,32 +25,46 @@ local HasFailed = false
 local function Failsafe()
 	if HasFailed then return end
 	HasFailed = true
-	
+
 	warn("[robloxstudio-rpc] Failed to connect to local server, aborting presence updates. Make sure you have started the local server and then restart Studio!")
 	plugin:Deactivate()
 end
 
 local function UpdatePresence()
 	local State = nil
-	
-	if not IsTestMode then
+	local Icon = "building-icon"
+	local IconText = "Editing"
+
+	if IsTestMode then
+		Icon = "testing-icon"
+		IconText = "Testing"
+	else
 		if IsEditingScript then
 			State = "Editing " .. IsEditingScript.Name
+			Icon = "editing-icon"
+			IconText = "Programming"
 		elseif IsAnimatingRig then
 			State = "Animating a rig"
+			Icon = "animating-icon"
+			IconText = "Animating"
 		end
 	end
-	
-	local success = pcall(HttpService.RequestAsync, HttpService, {
+
+	local success, m = pcall(HttpService.RequestAsync, HttpService, {
 		Url = ExternalUrl,
 		Method = "POST",
 		Body = HttpService:JSONEncode({
 			Timestamp = StartTime,
 			Details = (IsTestMode and "Testing" or "Editing") .. " " .. GameName,
-			State = State
+			State = State,
+			Icon = Icon,
+			IconText = IconText
 		})
 	})
-	if not success then Failsafe() end
+	if not success then 
+		if m == "Http requests can only be executed by game server" then return end -- For some reason it still makes the request but errors
+		Failsafe() 
+	end
 end
 
 local function KillPresence()
@@ -72,7 +86,7 @@ CoreGui.ChildAdded:Connect(function(Object)
 	if Object:IsA("Folder") and Object.Name == "GridLines" and not IsTestMode and not IsAnimatingRig then
 		IsAnimatingRig = true
 		UpdatePresence()
-		
+
 		Object.AncestryChanged:Connect(function()
 			print("Ancestry changed")
 			IsAnimatingRig = false

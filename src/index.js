@@ -21,6 +21,8 @@ http.createServer((req, res) => {
                 startTimestamp: body.Timestamp,
                 largeImageKey: 'studio-icon',
                 largeImageText: 'Roblox Studio',
+                smallImageKey: body.Icon,
+                smallImageText: body.Icon ? body.IconText : null,
                 details: body.Details,
                 state: body.State,
                 instance: false
