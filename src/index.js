@@ -21,11 +21,11 @@ http.createServer((req, res) => {
                 startTimestamp: body.Timestamp,
                 largeImageKey: 'studio-icon',
                 largeImageText: 'Roblox Studio',
-                details: `Editing ${body.GameName}`,
-                state: body.Action,
+                details: body.Details,
+                state: body.State,
                 instance: false
             }).then(() => {
-                console.log(`\x1b[32m[robloxstudio-rpc]\x1b[0m Editing ${body.GameName}${body.Action ? ` | ${body.Action}` : ''}`);
+                console.log(`\x1b[32m[robloxstudio-rpc]\x1b[0m ${body.Details}${body.State ? ` | ${body.State}` : ''}`);
 
                 res.writeHead(200);
                 res.write('Success');
